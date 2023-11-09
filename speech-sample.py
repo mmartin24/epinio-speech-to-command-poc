@@ -1,34 +1,44 @@
+
+# Python program to translate
+# speech to text 
+# Tweaked from: https://www.geeksforgeeks.org/python-convert-speech-to-text-and-text-to-speech/
+
 import speech_recognition as sr
- 
-def main():
- 
-    r = sr.Recognizer()
- 
-    with sr.Microphone() as source:
-        r.adjust_for_ambient_noise(source)
- 
-        print("Please say something")
- 
-        audio = r.listen(source)
- 
-        print("Recognizing Now .... ")
- 
- 
-        # recognize speech using google
- 
+
+# Initialize the speech recognizer
+r = sr.Recognizer()
+
+# Define a function to convert speech to text
+def record_text():
+    # Continuously listen for and convert speech to text
+    while True:
         try:
-            print("You have said \n" + r.recognize_google(audio))
-            print("Audio Recorded Successfully \n ")
- 
- 
-        except Exception as e:
-            print("Error :  " + str(e))
-  
- 
-        # write audio
-        with open("recorded.wav", "wb") as f:
-            f.write(audio.get_wav_data())
- 
- 
-if __name__ == "__main__":
-    main()
+            # Use the microphone as the input source
+            with sr.Microphone() as source:
+                # Adjust for ambient noise to improve recognition
+                r.adjust_for_ambient_noise(source, duration=0.2)
+                # Listen for the user's input
+                print(f'Please say the Epinio command you wish to be executed \n')
+                audio2 = r.listen(source)
+                # Use Google's speech recognition service to convert audio to text
+                MyText = r.recognize_google(audio2)
+                # Convert the recognized text to lowercase
+                MyText = MyText.lower()
+                return MyText
+        except sr.RequestError as e:
+            # Handle the case where the recognition request fails
+            print("Could not request results; {0}".format(e))
+        except sr.UnknownValueError:
+            # Handle the case where the input speech is not recognized
+            print("An unknown error occurred")
+
+# Define a function to write the recognized text to an output file
+def output_text(text):
+    f = open("output.txt", "a")
+    f.write(text)
+    print (f'I understood you said: "{text}"')
+    f.write("\n")
+    f.close()
+
+text = record_text()
+output_text(text)

@@ -2,7 +2,7 @@ import os
 import pyautogui
 import time
 
-exec(open("speech-sample-2.py").read())
+exec(open("speech-sample.py").read())
 exec(open("word-parsing.py").read())
 
 # Small delay to let parsing to end
